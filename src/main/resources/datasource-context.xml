@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc   
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd  
+    http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
+    http://www.springframework.org/schema/aop   
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd" default-lazy-init="true">  
+    <description>数据源信息</description>  
+    <!-- com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean -->  
+    <bean id="abstractXADataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close" abstract="true">    
+       <property name="xaDataSourceClassName" value="${jdbc.xaDataSourceClassName}"/>  <!-- SQLErrorCodes loaded: [DB2, Derby, H2, HSQL, Informix, MS-SQL, MySQL, Oracle, PostgreSQL, Sybase, Hana]  -->  
+       <property name="poolSize" value="10" />    
+       <property name="minPoolSize" value="10"/>    
+       <property name="maxPoolSize" value="30"/>    
+       <property name="borrowConnectionTimeout" value="60"/>    
+       <property name="reapTimeout" value="20"/>    
+       <property name="maxIdleTime" value="60"/>    
+       <property name="maintenanceInterval" value="60"/>    
+       <property name="loginTimeout" value="60"/>    
+       <property name="testQuery" value="${validationQuery}"/>    
+    </bean>    
+    <bean id="dataSource1" parent="abstractXADataSource">    
+        <property name="uniqueResourceName" value="dsDB1" />    
+        <property name="xaProperties">  
+            <props>  
+                <prop key="url">${master.jdbc.url}</prop>  
+                <prop key="password">${jdbc.password}</prop>  
+                <prop key="user">${jdbc.username}</prop> <!-- mysql -->  
+                <!--durid config begin  -->
+                <!-- <prop key="driverClassName">${jdbc.driverClassName}</prop>   -->
+                <!-- <prop key="username">${jdbc.username}</prop> -->   <!-- durid -->  
+                <!-- <prop key="initialSize">0</prop>  --> 
+                <!-- <prop key="maxActive">20</prop> --> <!-- 若不配置则代码执行"{dataSource-1} inited"此处停止  -->  
+               <!--  <prop key="minIdle">0</prop>  
+                <prop key="maxWait">60000</prop> -->  
+                <!-- <prop key="validationQuery">${validationQuery}</prop> -->  
+                <!-- <prop key="testOnBorrow">false</prop>  
+                <prop key="testOnReturn">false</prop>  
+                <prop key="testWhileIdle">true</prop>  
+                <prop key="removeAbandoned">true</prop>  
+                <prop key="removeAbandonedTimeout">1800</prop>  
+                <prop key="logAbandoned">true</prop> -->  
+                <!-- <prop key="filters">mergeStat</prop>  --> 
+                <!--durid config end  -->
+            </props>  
+        </property>  
+    </bean>    
+    <bean id="dataSource2" parent="abstractXADataSource">    
+        <property name="uniqueResourceName" value="dsDB2" />    
+        <property name="xaProperties">  
+            <props>  
+                <prop key="url">${slave.jdbc.url}</prop>  
+                <prop key="password">${jdbc.password}</prop>  
+                 <prop key="user">${jdbc.username}</prop>  
+                 <!--durid config begin  -->
+                <!-- <prop key="driverClassName">${jdbc.driverClassName}</prop>  --> 
+                <!-- <prop key="username">${jdbc.username}</prop>  --> 
+                <!-- <prop key="initialSize">0</prop>  
+                <prop key="maxActive">20</prop>  
+                <prop key="minIdle">0</prop>  
+                <prop key="maxWait">60000</prop>   -->
+                <!-- <prop key="validationQuery">${validationQuery}</prop>  --> 
+                <!-- <prop key="testOnBorrow">false</prop>  
+                <prop key="testOnReturn">false</prop>  
+                <prop key="testWhileIdle">true</prop>  
+                <prop key="removeAbandoned">true</prop>  
+                <prop key="removeAbandonedTimeout">1800</prop>  
+                <prop key="logAbandoned">true</prop>  --> 
+                <!-- <prop key="filters">mergeStat</prop> -->  
+            </props>  
+        </property>  
+    </bean>    
+</beans>
